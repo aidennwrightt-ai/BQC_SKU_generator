@@ -6,139 +6,67 @@
 <title>BQC SKU Generator</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-  
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  :root {
-    --navy: #1F3864;
-    --blue: #2E75B6;
-    --light-blue: #D6E4F0;
-    --green: #70AD47;
-    --green-bg: #E2EFDA;
-    --red: #C00000;
-    --red-bg: #FCE4E4;
-    --amber: #ED7D31;
-    --amber-bg: #FFF2CC;
-    --grey: #F7F8FA;
-    --border: #E0E4EA;
-    --text: #1a1a2e;
-    --text-secondary: #5a6171;
-    --white: #ffffff;
-    --radius: 8px;
-  }
-  
-  body { font-family: 'Inter', sans-serif; background: var(--grey); color: var(--text); min-height: 100vh; }
-  
-  .header {
-    background: var(--navy);
-    color: white;
-    padding: 20px 32px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-  .header .subtitle { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 400; }
-  .header .logo { width: 36px; height: 36px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; }
-  
-  .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
-  
-  .steps { display: flex; gap: 8px; margin-bottom: 24px; }
-  .step-indicator {
-    display: flex; align-items: center; gap: 8px; padding: 8px 16px;
-    background: var(--white); border: 1px solid var(--border); border-radius: 20px;
-    font-size: 13px; font-weight: 500; color: var(--text-secondary);
-    transition: all 0.2s;
-  }
-  .step-indicator.active { background: var(--navy); color: white; border-color: var(--navy); }
-  .step-indicator.done { background: var(--green-bg); color: var(--green); border-color: var(--green); }
-  .step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--border); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
-  .step-indicator.active .step-num { background: rgba(255,255,255,0.2); color: white; }
-  .step-indicator.done .step-num { background: var(--green); color: white; }
-  
-  .card {
-    background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 24px; margin-bottom: 16px;
-  }
-  .card h2 { font-size: 16px; font-weight: 600; margin-bottom: 4px; color: var(--navy); }
-  .card .desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
-  
-  label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 4px; color: var(--text); }
-  input[type="text"], select {
-    width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px;
-    font-size: 14px; font-family: 'Inter', sans-serif; outline: none; transition: border 0.2s;
-  }
-  input:focus, select:focus { border-color: var(--blue); }
-  
-  .row { display: flex; gap: 16px; margin-bottom: 12px; }
-  .row > * { flex: 1; }
-  
-  .btn {
-    padding: 8px 20px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600;
-    font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.2s; display: inline-flex;
-    align-items: center; gap: 6px;
-  }
-  .btn-primary { background: var(--navy); color: white; }
-  .btn-primary:hover { background: #2a4a7a; }
-  .btn-secondary { background: var(--grey); color: var(--text); border: 1px solid var(--border); }
-  .btn-secondary:hover { background: #eef0f4; }
-  .btn-green { background: var(--green); color: white; }
-  .btn-green:hover { background: #5f9a3a; }
-  .btn-danger { background: var(--red-bg); color: var(--red); }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  
-  .upload-zone {
-    border: 2px dashed var(--border); border-radius: var(--radius); padding: 32px;
-    text-align: center; cursor: pointer; transition: all 0.2s;
-  }
-  .upload-zone:hover, .upload-zone.drag-over { border-color: var(--blue); background: var(--light-blue); }
-  .upload-zone .icon { font-size: 32px; margin-bottom: 8px; }
-  .upload-zone .label { font-size: 14px; font-weight: 500; }
-  .upload-zone .hint { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
-  .upload-zone.has-file { border-color: var(--green); background: var(--green-bg); }
-  
-  .sub-col-row {
-    display: flex; gap: 8px; align-items: center; margin-bottom: 8px;
-    padding: 8px 12px; background: var(--grey); border-radius: 6px;
-  }
-  .sub-col-row input { flex: 1; }
-  .sub-col-row select { flex: 2; font-size: 12px; }
-  .sub-col-row .remove-btn { background: none; border: none; color: var(--red); cursor: pointer; font-size: 18px; padding: 4px; }
-  
-  .stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 16px 0;
-  }
-  .stat { background: var(--grey); border-radius: 6px; padding: 12px; text-align: center; }
-  .stat .num { font-size: 24px; font-weight: 700; color: var(--navy); }
-  .stat .label { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
-  
-  .preview-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 12px; }
-  .preview-table th {
-    background: var(--navy); color: white; padding: 6px 8px; text-align: left;
-    font-weight: 500; position: sticky; top: 0;
-  }
-  .preview-table td { padding: 5px 8px; border-bottom: 1px solid var(--border); }
-  .preview-table tr:hover { background: var(--grey); }
-  .preview-wrap { max-height: 400px; overflow: auto; border: 1px solid var(--border); border-radius: 6px; }
-  
-  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .tag-green { background: var(--green-bg); color: var(--green); }
-  .tag-red { background: var(--red-bg); color: var(--red); }
-  .tag-amber { background: var(--amber-bg); color: var(--amber); }
-  .tag-blue { background: var(--light-blue); color: var(--blue); }
-  
-  .merchant-defaults { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-  
-  .hidden { display: none; }
-  .actions { display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end; }
-  
-  .alert { padding: 12px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 12px; }
-  .alert-info { background: var(--light-blue); color: var(--navy); }
-  .alert-success { background: var(--green-bg); color: #2d6b1a; }
-  .alert-warning { background: var(--amber-bg); color: #8a5000; }
-  
-  .progress { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin: 8px 0; }
-  .progress-bar { height: 100%; background: var(--blue); transition: width 0.3s; border-radius: 2px; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--navy:#1F3864;--blue:#2E75B6;--light-blue:#D6E4F0;--green:#70AD47;--green-bg:#E2EFDA;--red:#C00000;--red-bg:#FCE4E4;--amber:#ED7D31;--amber-bg:#FFF2CC;--grey:#F7F8FA;--border:#E0E4EA;--text:#1a1a2e;--text-sec:#5a6171;--white:#fff;--radius:8px}
+  body{font-family:'Inter',sans-serif;background:var(--grey);color:var(--text);min-height:100vh}
+  .header{background:var(--navy);color:#fff;padding:20px 32px;display:flex;align-items:center;gap:16px}
+  .header h1{font-size:22px;font-weight:700;letter-spacing:-0.5px}
+  .header .sub{font-size:13px;color:rgba(255,255,255,.6);font-weight:400}
+  .header .logo{width:36px;height:36px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px}
+  .container{max-width:1100px;margin:0 auto;padding:24px}
+  .steps{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+  .step-ind{display:flex;align-items:center;gap:8px;padding:8px 16px;background:var(--white);border:1px solid var(--border);border-radius:20px;font-size:13px;font-weight:500;color:var(--text-sec);transition:.2s}
+  .step-ind.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .step-ind.done{background:var(--green-bg);color:var(--green);border-color:var(--green)}
+  .sn{width:22px;height:22px;border-radius:50%;background:var(--border);color:var(--text-sec);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+  .step-ind.active .sn{background:rgba(255,255,255,.2);color:#fff}
+  .step-ind.done .sn{background:var(--green);color:#fff}
+  .card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
+  .card h2{font-size:16px;font-weight:600;margin-bottom:4px;color:var(--navy)}
+  .card .desc{font-size:13px;color:var(--text-sec);margin-bottom:16px}
+  label{font-size:13px;font-weight:500;display:block;margin-bottom:4px}
+  input[type="text"],select{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:.2s}
+  input:focus,select:focus{border-color:var(--blue)}
+  .row{display:flex;gap:16px;margin-bottom:12px}.row>*{flex:1}
+  .btn{padding:8px 20px;border:none;border-radius:6px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:6px}
+  .btn-pri{background:var(--navy);color:#fff}.btn-pri:hover{background:#2a4a7a}
+  .btn-sec{background:var(--grey);color:var(--text);border:1px solid var(--border)}.btn-sec:hover{background:#eef0f4}
+  .btn-grn{background:var(--green);color:#fff}.btn-grn:hover{background:#5f9a3a}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:32px;text-align:center;cursor:pointer;transition:.2s}
+  .upload-zone:hover,.upload-zone.drag-over{border-color:var(--blue);background:var(--light-blue)}
+  .upload-zone .icon{font-size:32px;margin-bottom:8px}
+  .upload-zone .label{font-size:14px;font-weight:500}
+  .upload-zone .hint{font-size:12px;color:var(--text-sec);margin-top:4px}
+  .upload-zone.has-file{border-color:var(--green);background:var(--green-bg)}
+  .sc-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:8px 12px;background:var(--grey);border-radius:6px}
+  .sc-row input{flex:1}.sc-row select{flex:2;font-size:12px}
+  .sc-row .rm{background:none;border:none;color:var(--red);cursor:pointer;font-size:18px;padding:4px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:16px 0}
+  .stat{background:var(--grey);border-radius:6px;padding:12px;text-align:center}
+  .stat .num{font-size:24px;font-weight:700;color:var(--navy)}
+  .stat .lbl{font-size:11px;color:var(--text-sec);margin-top:2px}
+  .ptable{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px}
+  .ptable th{background:var(--navy);color:#fff;padding:6px 8px;text-align:left;font-weight:500;position:sticky;top:0}
+  .ptable td{padding:5px 8px;border-bottom:1px solid var(--border)}
+  .ptable tr:hover{background:var(--grey)}
+  .pw{max-height:400px;overflow:auto;border:1px solid var(--border);border-radius:6px}
+  .tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+  .tag-grn{background:var(--green-bg);color:var(--green)}
+  .tag-red{background:var(--red-bg);color:var(--red)}
+  .tag-amb{background:var(--amber-bg);color:var(--amber)}
+  .tag-blu{background:var(--light-blue);color:var(--blue)}
+  .md{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+  .hidden{display:none}
+  .actions{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+  .alert{padding:12px 16px;border-radius:6px;font-size:13px;margin-bottom:12px}
+  .alert-info{background:var(--light-blue);color:var(--navy)}
+  .alert-ok{background:var(--green-bg);color:#2d6b1a}
+  .alert-warn{background:var(--amber-bg);color:#8a5000}
+  .progress{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin:8px 0}
+  .progress-bar{height:100%;background:var(--blue);transition:width .3s;border-radius:2px}
+  .sku-preview{font-family:monospace;background:var(--grey);padding:8px 12px;border-radius:6px;font-size:13px;margin:8px 0;border-left:3px solid var(--blue)}
+  .format-info{font-size:12px;color:var(--text-sec);margin-top:4px}
 </style>
 </head>
 <body>
@@ -147,632 +75,495 @@
   <div class="logo">BQ</div>
   <div>
     <h1>BQC SKU Generator</h1>
-    <div class="subtitle">Generate SKUs, barcodes & Google Merchant fields from Shopify exports</div>
+    <div class="sub">Generate SKUs, lookup barcodes & fill Google Merchant fields</div>
   </div>
 </div>
 
 <div class="container">
-  
   <div class="steps">
-    <div class="step-indicator active" id="step1-ind"><span class="step-num">1</span> Brand & Collections</div>
-    <div class="step-indicator" id="step2-ind"><span class="step-num">2</span> Upload CSV</div>
-    <div class="step-indicator" id="step3-ind"><span class="step-num">3</span> Review & Download</div>
+    <div class="step-ind active" id="si1"><span class="sn">1</span> Brand & Collections</div>
+    <div class="step-ind" id="si2"><span class="sn">2</span> Upload CSV</div>
+    <div class="step-ind" id="si3"><span class="sn">3</span> Review & Download</div>
   </div>
 
-  <!-- STEP 1: Brand & Sub-Collections -->
+  <!-- STEP 1 -->
   <div id="step1">
     <div class="card">
       <h2>Brand Details</h2>
-      <div class="desc">Enter the brand name and its sub-collections. Each sub-collection gets a Google Product Category.</div>
-      
+      <div class="desc">SKU format: <strong>BRAND-SUBCOL-PRODUCT</strong> (e.g. EBI-LASH-VOLSTY001)</div>
       <div class="row">
         <div>
-          <label>Brand Name</label>
-          <input type="text" id="brandName" placeholder="e.g. EBIN NEW YORK">
+          <label>Main Brand Name</label>
+          <input type="text" id="brandName" placeholder="e.g. EBIN NEW YORK" oninput="updatePreview()">
         </div>
         <div>
-          <label>Brand Code (auto or custom, 3-4 chars)</label>
-          <input type="text" id="brandCode" placeholder="Auto-generated" maxlength="4" style="text-transform:uppercase">
+          <label>Brand Code (3-4 chars, auto or custom)</label>
+          <input type="text" id="brandCode" placeholder="Auto" maxlength="4" style="text-transform:uppercase" oninput="this.dataset.m=this.value.trim()?'1':'';updatePreview()">
         </div>
       </div>
+      <div class="sku-preview" id="skuPreview">SKU preview will appear here</div>
+      <div class="format-info">Format: BRAND CODE − SUB-COLLECTION CODE − PRODUCT CODE + SIZE</div>
     </div>
 
     <div class="card">
       <h2>Google Merchant Center Defaults</h2>
-      <div class="desc">These apply to all products. Change per sub-collection if needed.</div>
-      <div class="merchant-defaults">
-        <div>
-          <label>Condition</label>
-          <select id="defaultCondition">
-            <option value="new" selected>New</option>
-            <option value="refurbished">Refurbished</option>
-            <option value="used">Used</option>
-          </select>
-        </div>
-        <div>
-          <label>Age Group</label>
-          <select id="defaultAgeGroup">
-            <option value="adult" selected>Adult</option>
-            <option value="kids">Kids</option>
-            <option value="toddler">Toddler</option>
-            <option value="infant">Infant</option>
-            <option value="newborn">Newborn</option>
-          </select>
-        </div>
-        <div>
-          <label>Gender</label>
-          <select id="defaultGender">
-            <option value="unisex" selected>Unisex</option>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-          </select>
-        </div>
-        <div>
-          <label>Material (optional)</label>
-          <input type="text" id="defaultMaterial" placeholder="e.g. Synthetic Hair, Keratin">
-        </div>
+      <div class="desc">Applied to all products. Override per sub-collection if needed.</div>
+      <div class="md">
+        <div><label>Condition</label><select id="dCond"><option value="new" selected>New</option><option value="refurbished">Refurbished</option><option value="used">Used</option></select></div>
+        <div><label>Age Group</label><select id="dAge"><option value="adult" selected>Adult</option><option value="kids">Kids</option><option value="toddler">Toddler</option><option value="infant">Infant</option></select></div>
+        <div><label>Gender</label><select id="dGender"><option value="unisex" selected>Unisex</option><option value="female">Female</option><option value="male">Male</option></select></div>
+        <div><label>Material (optional)</label><input type="text" id="dMaterial" placeholder="e.g. Synthetic Hair"></div>
       </div>
     </div>
 
     <div class="card">
       <h2>Sub-Collections</h2>
-      <div class="desc">Add sub-collections and assign a Google Product Category to each one. This determines how Google classifies the products.</div>
-      
-      <div id="subCollections"></div>
-      <button class="btn btn-secondary" onclick="addSubCollection()">+ Add Sub-Collection</button>
-      
-      <div class="actions">
-        <button class="btn btn-primary" onclick="goToStep2()">Next → Upload CSV</button>
-      </div>
+      <div class="desc">Each sub-collection gets a short code for the SKU and a Google Product Category.</div>
+      <div id="scList"></div>
+      <button class="btn btn-sec" onclick="addSC()">+ Add Sub-Collection</button>
+      <div class="actions"><button class="btn btn-pri" onclick="toStep2()">Next → Upload CSV</button></div>
     </div>
   </div>
 
-  <!-- STEP 2: Upload CSV -->
+  <!-- STEP 2 -->
   <div id="step2" class="hidden">
     <div class="card">
       <h2>Upload Shopify Product Export</h2>
-      <div class="desc">Export from Shopify: Products → Export → All products → CSV for Excel. Upload that file here.</div>
-      
-      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('csvFile').click()">
+      <div class="desc">Products → Export → All products → CSV for Excel.</div>
+      <div class="upload-zone" id="uz" onclick="document.getElementById('cf').click()">
         <div class="icon">📄</div>
         <div class="label">Click to upload or drag & drop</div>
-        <div class="hint">Shopify product export CSV file</div>
+        <div class="hint">Shopify product export CSV</div>
       </div>
-      <input type="file" id="csvFile" accept=".csv" class="hidden" onchange="handleFile(event)">
-      
-      <div id="uploadStatus" class="hidden">
-        <div class="progress"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
-        <div id="uploadMsg" style="font-size:13px; margin-top:8px;"></div>
+      <input type="file" id="cf" accept=".csv" class="hidden" onchange="handleFile(event)">
+      <div id="uStatus" class="hidden">
+        <div class="progress"><div class="progress-bar" id="pBar" style="width:0%"></div></div>
+        <div id="uMsg" style="font-size:13px;margin-top:8px"></div>
       </div>
-      
+
+      <div class="card" id="barcodeSettings" style="margin-top:16px;background:var(--grey)">
+        <h2>Barcode / GTIN Lookup</h2>
+        <div class="desc">For products missing barcodes, the tool will search UPCitemdb (free, 100 lookups/day).</div>
+        <div class="row">
+          <div>
+            <label>Lookup missing barcodes?</label>
+            <select id="barcodeMode">
+              <option value="lookup">Yes — search online for missing barcodes</option>
+              <option value="skip">No — just flag them as missing</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <div class="actions">
-        <button class="btn btn-secondary" onclick="goToStep1()">← Back</button>
-        <button class="btn btn-primary" id="processBtn" onclick="processCSV()" disabled>Generate SKUs</button>
+        <button class="btn btn-sec" onclick="toStep1()">← Back</button>
+        <button class="btn btn-pri" id="procBtn" onclick="processCSV()" disabled>Generate SKUs</button>
       </div>
     </div>
   </div>
 
-  <!-- STEP 3: Review & Download -->
+  <!-- STEP 3 -->
   <div id="step3" class="hidden">
     <div class="card">
       <h2>Generation Complete</h2>
-      <div class="desc">Review the results below. Everything looks good? Download the Shopify reimport CSV.</div>
-      
-      <div class="stats" id="statsGrid"></div>
-      
+      <div class="desc">Review below. Download when satisfied.</div>
+      <div class="stats" id="sGrid"></div>
       <div id="alerts"></div>
-      
-      <div class="preview-wrap">
-        <table class="preview-table" id="previewTable">
-          <thead><tr id="previewHead"></tr></thead>
-          <tbody id="previewBody"></tbody>
-        </table>
-      </div>
-      
+      <div class="pw"><table class="ptable" id="pTable"><thead><tr id="pHead"></tr></thead><tbody id="pBody"></tbody></table></div>
       <div class="actions">
-        <button class="btn btn-secondary" onclick="goToStep1()">← Start Over</button>
-        <button class="btn btn-green" onclick="downloadCSV()">⬇ Download Shopify Reimport CSV</button>
+        <button class="btn btn-sec" onclick="toStep1()">← Start Over</button>
+        <button class="btn btn-grn" onclick="dlCSV()">⬇ Download Shopify Reimport CSV</button>
       </div>
     </div>
   </div>
-
 </div>
 
 <script>
-// ============================================================
-//  GOOGLE PRODUCT CATEGORIES (Beauty & Cosmetics focused)
-// ============================================================
-const GOOGLE_CATEGORIES = [
-  { id: "2441", label: "Health & Beauty > Personal Care > Cosmetics > Eye Makeup > False Eyelashes" },
-  { id: "6019", label: "Health & Beauty > Personal Care > Hair Care > Hair Extensions" },
-  { id: "4771", label: "Health & Beauty > Personal Care > Hair Care > Wigs" },
-  { id: "2636", label: "Health & Beauty > Personal Care > Hair Care > Shampoo & Conditioner" },
-  { id: "3012", label: "Health & Beauty > Personal Care > Hair Care > Hair Styling Products" },
-  { id: "2935", label: "Health & Beauty > Personal Care > Hair Care > Hair Color" },
-  { id: "6345", label: "Health & Beauty > Personal Care > Hair Care > Hair Treatment Oils & Serums" },
-  { id: "5869", label: "Health & Beauty > Personal Care > Hair Care" },
-  { id: "2571", label: "Health & Beauty > Personal Care > Cosmetics > Lip Makeup" },
-  { id: "2930", label: "Health & Beauty > Personal Care > Cosmetics > Eye Makeup" },
-  { id: "2568", label: "Health & Beauty > Personal Care > Cosmetics > Face Makeup" },
-  { id: "2958", label: "Health & Beauty > Personal Care > Cosmetics > Nail Art & Artificial Nails" },
-  { id: "4221", label: "Health & Beauty > Personal Care > Cosmetics > Cosmetic Tools > Makeup Brushes" },
-  { id: "478", label: "Health & Beauty > Personal Care > Cosmetics" },
-  { id: "2915", label: "Health & Beauty > Personal Care > Skin Care" },
-  { id: "6260", label: "Health & Beauty > Personal Care > Nail Care" },
-  { id: "6951", label: "Health & Beauty > Fragrances" },
-  { id: "474", label: "Health & Beauty > Personal Care" },
-  { id: "469", label: "Health & Beauty" },
-  { id: "custom", label: "— Enter custom category —" },
+// Google Product Categories
+const GCATS=[
+  {id:"2441",l:"Health & Beauty > Cosmetics > Eye Makeup > False Eyelashes"},
+  {id:"6019",l:"Health & Beauty > Hair Care > Hair Extensions"},
+  {id:"4771",l:"Health & Beauty > Hair Care > Wigs"},
+  {id:"2636",l:"Health & Beauty > Hair Care > Shampoo & Conditioner"},
+  {id:"3012",l:"Health & Beauty > Hair Care > Hair Styling Products"},
+  {id:"2935",l:"Health & Beauty > Hair Care > Hair Color"},
+  {id:"6345",l:"Health & Beauty > Hair Care > Hair Treatment Oils & Serums"},
+  {id:"5869",l:"Health & Beauty > Hair Care"},
+  {id:"2571",l:"Health & Beauty > Cosmetics > Lip Makeup"},
+  {id:"2930",l:"Health & Beauty > Cosmetics > Eye Makeup"},
+  {id:"2568",l:"Health & Beauty > Cosmetics > Face Makeup"},
+  {id:"2958",l:"Health & Beauty > Cosmetics > Nail Art & Artificial Nails"},
+  {id:"6260",l:"Health & Beauty > Nail Care"},
+  {id:"478",l:"Health & Beauty > Cosmetics"},
+  {id:"2915",l:"Health & Beauty > Skin Care"},
+  {id:"6951",l:"Health & Beauty > Fragrances"},
+  {id:"474",l:"Health & Beauty > Personal Care"},
+  {id:"569",l:"Health & Beauty > Personal Care > Oral Care"},
+  {id:"469",l:"Health & Beauty"},
+  {id:"custom",l:"— Enter custom category —"},
 ];
 
-// ============================================================
-//  STATE
-// ============================================================
-let subCollections = [];
-let parsedCSV = null;
-let processedData = null;
+let scs=[],parsed=null,result=null;
 
-// ============================================================
-//  SUB-COLLECTION MANAGEMENT
-// ============================================================
-function addSubCollection(name) {
-  const id = Date.now();
-  subCollections.push({ id, name: name || '', categoryId: GOOGLE_CATEGORIES[0].id, customCategory: '' });
-  renderSubCollections();
+// Sub-collection management
+function addSC(name){
+  scs.push({id:Date.now(),name:name||'',code:'',catId:GCATS[0].id,customCat:''});
+  renderSC();
 }
-
-function removeSubCollection(id) {
-  subCollections = subCollections.filter(sc => sc.id !== id);
-  renderSubCollections();
-}
-
-function renderSubCollections() {
-  const container = document.getElementById('subCollections');
-  container.innerHTML = subCollections.map(sc => `
-    <div class="sub-col-row">
-      <input type="text" placeholder="Sub-collection name" value="${escapeHtml(sc.name)}" 
-             onchange="updateSubCol(${sc.id}, 'name', this.value)">
-      <select onchange="updateSubCol(${sc.id}, 'categoryId', this.value)">
-        ${GOOGLE_CATEGORIES.map(c => `<option value="${c.id}" ${c.id === sc.categoryId ? 'selected' : ''}>${c.label}</option>`).join('')}
+function rmSC(id){scs=scs.filter(s=>s.id!==id);renderSC()}
+function renderSC(){
+  const el=document.getElementById('scList');
+  el.innerHTML=scs.map(sc=>`
+    <div class="sc-row">
+      <input type="text" placeholder="Sub-collection name" value="${esc(sc.name)}"
+        onchange="updSC(${sc.id},'name',this.value)" style="flex:1.5">
+      <input type="text" placeholder="Code (auto)" value="${esc(sc.code)}" maxlength="6"
+        onchange="updSC(${sc.id},'code',this.value)" style="flex:0.6;text-transform:uppercase"
+        title="Short code for SKU (e.g. LASH, CURLCR, NAILS)">
+      <select onchange="updSC(${sc.id},'catId',this.value)" style="flex:2">
+        ${GCATS.map(c=>`<option value="${c.id}"${c.id===sc.catId?' selected':''}>${c.l}</option>`).join('')}
       </select>
-      <button class="remove-btn" onclick="removeSubCollection(${sc.id})">✕</button>
+      <button class="rm" onclick="rmSC(${sc.id})">✕</button>
     </div>
-    ${sc.categoryId === 'custom' ? `<div style="padding: 0 12px 8px;"><input type="text" placeholder="Enter full Google Product Category path" value="${escapeHtml(sc.customCategory)}" onchange="updateSubCol(${sc.id}, 'customCategory', this.value)" style="font-size:12px;"></div>` : ''}
+    ${sc.catId==='custom'?`<div style="padding:0 12px 8px"><input type="text" placeholder="Full Google category path" value="${esc(sc.customCat)}" onchange="updSC(${sc.id},'customCat',this.value)" style="font-size:12px"></div>`:''}
   `).join('');
+  updatePreview();
+}
+function updSC(id,f,v){const s=scs.find(x=>x.id===id);if(s)s[f]=v;if(f==='catId')renderSC();updatePreview()}
+function esc(s){return(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+
+// Auto brand code
+function genBrandCode(brand){
+  const c=document.getElementById('brandCode');
+  if(c.dataset.m)return c.value.toUpperCase();
+  const w=brand.toUpperCase().replace(/[^A-Z0-9\s]/g,'').split(/\s+/).filter(x=>x);
+  if(w.length>=2){let code=w.map(x=>x[0]).join('').slice(0,4);if(code.length<3)code=(w[0].slice(0,2)+w[w.length-1][0]).slice(0,4);return code}
+  return(w[0]||'BRD').slice(0,3);
 }
 
-function updateSubCol(id, field, value) {
-  const sc = subCollections.find(s => s.id === id);
-  if (sc) sc[field] = value;
-  if (field === 'categoryId') renderSubCollections();
+// Auto sub-collection code
+function genSCCode(name){
+  const w=name.toUpperCase().replace(/[^A-Z0-9\s]/g,'').split(/\s+/).filter(x=>x&&!['AND','THE','OF','FOR','COLLECTION','COLLECTIONS'].includes(x));
+  if(!w.length)return'SUB';
+  if(w.length===1)return w[0].slice(0,6);
+  return w.map(x=>x.slice(0,3)).join('').slice(0,6);
 }
 
-function escapeHtml(str) { return (str || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+function productCode(title,brandWords,scWords){
+  const stop=new Set([...brandWords,...scWords,'THE','AND','WITH','FOR','OF','IN','BY','TO','COLLECTION','COLLECTIONS']);
+  let clean=title.split(/[|\-–—]/)[0];
+  clean=clean.replace(/\d+(?:\.\d+)?\s*(ml|l|g|kg|oz|fl\s*oz)\b/gi,'');
+  const w=clean.toUpperCase().replace(/[^A-Z0-9\s]/g,'').split(/\s+/).filter(x=>x&&!stop.has(x)&&isNaN(x));
+  if(!w.length)return'PROD';
+  if(w.length===1)return w[0].slice(0,8);
+  return w.slice(0,3).map(x=>x.slice(0,3)).join('').slice(0,9);
+}
 
-// ============================================================
-//  NAVIGATION
-// ============================================================
-function goToStep1() {
-  document.getElementById('step1').classList.remove('hidden');
-  document.getElementById('step2').classList.add('hidden');
-  document.getElementById('step3').classList.add('hidden');
-  setStepIndicator(1);
+function sizeToken(title){
+  const m=title.match(/(\d+(?:\.\d+)?)\s*(ml|l|g|kg|oz|fl\s*oz)\b/i);
+  return m?(m[1]+m[2].replace(/\s/g,'')).toUpperCase():'';
 }
-function goToStep2() {
-  const brand = document.getElementById('brandName').value.trim();
-  if (!brand) { alert('Please enter a brand name.'); return; }
-  if (subCollections.length === 0 || !subCollections.some(sc => sc.name.trim())) {
-    alert('Add at least one sub-collection.'); return;
-  }
-  document.getElementById('step1').classList.add('hidden');
-  document.getElementById('step2').classList.remove('hidden');
-  document.getElementById('step3').classList.add('hidden');
-  setStepIndicator(2);
+function optCode(v){return(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8)}
+
+// Live SKU preview
+function updatePreview(){
+  const brand=document.getElementById('brandName').value.trim();
+  if(!brand){document.getElementById('skuPreview').textContent='Enter a brand name to see preview';return}
+  const bc=genBrandCode(brand);
+  document.getElementById('brandCode').placeholder=bc;
+  const sc=scs.find(s=>s.name.trim());
+  const scCode=sc?(sc.code.toUpperCase()||genSCCode(sc.name)):'SUBCOL';
+  document.getElementById('skuPreview').innerHTML=
+    `<strong>${bc}</strong>-<strong>${scCode}</strong>-PRODUCT   →   e.g. ${bc}-${scCode}-VOLSTY001`;
 }
-function goToStep3() {
-  document.getElementById('step1').classList.add('hidden');
-  document.getElementById('step2').classList.add('hidden');
-  document.getElementById('step3').classList.remove('hidden');
-  setStepIndicator(3);
+
+// Navigation
+function toStep1(){show(1)}
+function toStep2(){
+  if(!document.getElementById('brandName').value.trim()){alert('Enter a brand name');return}
+  if(!scs.length||!scs.some(s=>s.name.trim())){alert('Add at least one sub-collection');return}
+  show(2);
 }
-function setStepIndicator(active) {
-  [1,2,3].forEach(i => {
-    const el = document.getElementById('step'+i+'-ind');
-    el.classList.remove('active','done');
-    if (i < active) el.classList.add('done');
-    if (i === active) el.classList.add('active');
+function toStep3(){show(3)}
+function show(n){
+  [1,2,3].forEach(i=>{
+    document.getElementById('step'+i).classList.toggle('hidden',i!==n);
+    const si=document.getElementById('si'+i);
+    si.classList.remove('active','done');
+    if(i<n)si.classList.add('done');if(i===n)si.classList.add('active');
   });
 }
 
-// ============================================================
-//  CSV PARSING
-// ============================================================
-function parseCSV(text) {
-  const rows = []; let current = []; let field = ''; let inQuotes = false;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i]; const next = text[i+1];
-    if (inQuotes) {
-      if (ch === '"' && next === '"') { field += '"'; i++; }
-      else if (ch === '"') inQuotes = false;
-      else field += ch;
-    } else {
-      if (ch === '"') inQuotes = true;
-      else if (ch === ',') { current.push(field); field = ''; }
-      else if (ch === '\n' || (ch === '\r' && next === '\n')) {
-        current.push(field); field = ''; rows.push(current); current = [];
-        if (ch === '\r') i++;
-      } else if (ch === '\r') { current.push(field); field = ''; rows.push(current); current = []; }
-      else field += ch;
-    }
+// CSV parse
+function parseCSV(text){
+  const rows=[];let cur=[],field='',inQ=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i],nx=text[i+1];
+    if(inQ){if(ch==='"'&&nx==='"'){field+='"';i++}else if(ch==='"')inQ=false;else field+=ch}
+    else{if(ch==='"')inQ=true;else if(ch===','){cur.push(field);field=''}
+    else if(ch==='\n'||(ch==='\r'&&nx==='\n')){cur.push(field);field='';rows.push(cur);cur=[];if(ch==='\r')i++}
+    else if(ch==='\r'){cur.push(field);field='';rows.push(cur);cur=[]}
+    else field+=ch}
   }
-  if (field || current.length) { current.push(field); rows.push(current); }
-  return rows.filter(r => r.some(c => c.trim()));
+  if(field||cur.length){cur.push(field);rows.push(cur)}
+  return rows.filter(r=>r.some(c=>c.trim()));
 }
 
-function handleFile(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const zone = document.getElementById('uploadZone');
-  zone.classList.add('has-file');
-  zone.innerHTML = `<div class="icon">✅</div><div class="label">${file.name}</div><div class="hint">${(file.size/1024).toFixed(0)} KB</div>`;
-  
-  document.getElementById('uploadStatus').classList.remove('hidden');
-  document.getElementById('progressBar').style.width = '30%';
-  document.getElementById('uploadMsg').textContent = 'Reading file...';
-  
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    document.getElementById('progressBar').style.width = '60%';
-    document.getElementById('uploadMsg').textContent = 'Parsing CSV...';
-    
-    setTimeout(() => {
-      const rows = parseCSV(ev.target.result);
-      if (rows.length < 2) { document.getElementById('uploadMsg').textContent = '❌ No data found in CSV.'; return; }
-      
-      parsedCSV = { headers: rows[0], rows: rows.slice(1) };
-      const productCount = new Set(rows.slice(1).map(r => r[0]).filter(h => h.trim())).size || rows.length - 1;
-      
-      document.getElementById('progressBar').style.width = '100%';
-      document.getElementById('uploadMsg').innerHTML = `✅ Loaded <strong>${rows.length - 1}</strong> rows, approximately <strong>${productCount}</strong> products`;
-      document.getElementById('processBtn').disabled = false;
-    }, 200);
+function handleFile(e){
+  const file=e.target.files[0];if(!file)return;
+  const z=document.getElementById('uz');
+  z.classList.add('has-file');
+  z.innerHTML=`<div class="icon">✅</div><div class="label">${file.name}</div><div class="hint">${(file.size/1024).toFixed(0)} KB</div>`;
+  document.getElementById('uStatus').classList.remove('hidden');
+  document.getElementById('pBar').style.width='30%';
+  document.getElementById('uMsg').textContent='Reading file...';
+  const r=new FileReader();
+  r.onload=ev=>{
+    document.getElementById('pBar').style.width='60%';
+    document.getElementById('uMsg').textContent='Parsing CSV...';
+    setTimeout(()=>{
+      const rows=parseCSV(ev.target.result);
+      if(rows.length<2){document.getElementById('uMsg').textContent='❌ No data found';return}
+      parsed={headers:rows[0],rows:rows.slice(1)};
+      const pc=new Set(rows.slice(1).map(r=>r[0]).filter(h=>h.trim())).size||rows.length-1;
+      document.getElementById('pBar').style.width='100%';
+      document.getElementById('uMsg').innerHTML=`✅ Loaded <b>${rows.length-1}</b> rows, ~<b>${pc}</b> products`;
+      document.getElementById('procBtn').disabled=false;
+    },200);
   };
-  reader.readAsText(file);
+  r.readAsText(file);
 }
 
 // Drag & drop
-const zone = document.getElementById('uploadZone');
-zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-zone.addEventListener('drop', e => {
-  e.preventDefault(); zone.classList.remove('drag-over');
-  const file = e.dataTransfer.files[0];
-  if (file && file.name.endsWith('.csv')) {
-    document.getElementById('csvFile').files = e.dataTransfer.files;
-    handleFile({ target: { files: [file] } });
-  }
-});
+const uz=document.getElementById('uz');
+uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag-over')});
+uz.addEventListener('dragleave',()=>uz.classList.remove('drag-over'));
+uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f&&f.name.endsWith('.csv')){document.getElementById('cf').files=e.dataTransfer.files;handleFile({target:{files:[f]}})}});
 
-// ============================================================
-//  SKU GENERATION
-// ============================================================
-function generateBrandCode(brand) {
-  const custom = document.getElementById('brandCode').value.trim().toUpperCase();
-  if (custom.length >= 2) return custom;
-  
-  const words = brand.toUpperCase().replace(/[^A-Z0-9\s]/g, '').split(/\s+/).filter(w => w);
-  if (words.length >= 2) {
-    let code = words.map(w => w[0]).join('').slice(0, 4);
-    if (code.length < 3) code = (words[0].slice(0, 2) + words[words.length - 1][0]).slice(0, 4);
-    return code;
-  }
-  return (words[0] || 'BRD').slice(0, 3);
-}
-
-function productCode(title, brandWords) {
-  const stop = new Set([...brandWords, 'THE', 'AND', 'WITH', 'FOR', 'OF', 'IN', 'BY', 'TO']);
-  let clean = title.split(/[|\-–—]/)[0];
-  clean = clean.replace(/\d+(?:\.\d+)?\s*(ml|l|g|kg|oz|fl\s*oz)\b/gi, '');
-  const words = clean.toUpperCase().replace(/[^A-Z0-9\s]/g, '').split(/\s+/).filter(w => w && !stop.has(w) && isNaN(w));
-  if (!words.length) return 'PROD';
-  if (words.length === 1) return words[0].slice(0, 8);
-  return words.slice(0, 3).map(w => w.slice(0, 3)).join('').slice(0, 9);
-}
-
-function sizeToken(title) {
-  const m = title.match(/(\d+(?:\.\d+)?)\s*(ml|l|g|kg|oz|fl\s*oz)\b/i);
-  return m ? (m[1] + m[2].replace(/\s/g, '')).toUpperCase() : '';
-}
-
-function optCode(val) {
-  return (val || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
-}
-
-// ============================================================
-//  PROCESS CSV
-// ============================================================
-function processCSV() {
-  if (!parsedCSV) return;
-  
-  const brand = document.getElementById('brandName').value.trim();
-  const bCode = generateBrandCode(brand);
-  const brandWords = brand.toUpperCase().replace(/[^A-Z0-9\s]/g, '').split(/\s+/).filter(w => w);
-  const condition = document.getElementById('defaultCondition').value;
-  const ageGroup = document.getElementById('defaultAgeGroup').value;
-  const gender = document.getElementById('defaultGender').value;
-  const material = document.getElementById('defaultMaterial').value.trim();
-  
-  // Build sub-collection → category map
-  const categoryMap = {};
-  subCollections.forEach(sc => {
-    if (sc.name.trim()) {
-      const cat = sc.categoryId === 'custom' ? sc.customCategory : GOOGLE_CATEGORIES.find(c => c.id === sc.categoryId)?.label || '';
-      categoryMap[sc.name.trim().toLowerCase()] = cat;
+// Barcode lookup via UPCitemdb
+async function lookupBarcode(productName,brand){
+  try{
+    const q=encodeURIComponent(brand+' '+productName);
+    const resp=await fetch('https://api.upcitemdb.com/prod/trial/search?s='+q+'&match_mode=0&type=product',{
+      headers:{'Accept':'application/json'}
+    });
+    if(!resp.ok)return null;
+    const data=await resp.json();
+    if(data.items&&data.items.length>0){
+      const item=data.items[0];
+      return{
+        barcode:item.ean||item.upc||'',
+        gtin:item.ean||item.upc||'',
+        title:item.title||''
+      };
     }
+  }catch(e){console.log('Barcode lookup failed:',e)}
+  return null;
+}
+
+// Process CSV
+async function processCSV(){
+  if(!parsed)return;
+  const brand=document.getElementById('brandName').value.trim();
+  const bCode=genBrandCode(brand);
+  const brandWords=brand.toUpperCase().replace(/[^A-Z0-9\s]/g,'').split(/\s+/).filter(x=>x);
+  const condition=document.getElementById('dCond').value;
+  const ageGroup=document.getElementById('dAge').value;
+  const gender=document.getElementById('dGender').value;
+  const material=document.getElementById('dMaterial').value.trim();
+  const doLookup=document.getElementById('barcodeMode').value==='lookup';
+
+  // Sub-collection map
+  const scMap={};
+  scs.forEach(sc=>{
+    if(!sc.name.trim())return;
+    const code=(sc.code.toUpperCase()||genSCCode(sc.name));
+    const cat=sc.catId==='custom'?sc.customCat:GCATS.find(c=>c.id===sc.catId)?.l||'';
+    const words=sc.name.toUpperCase().replace(/[^A-Z0-9\s]/g,'').split(/\s+/).filter(x=>x);
+    scMap[sc.name.trim().toLowerCase()]={code,cat,words,name:sc.name.trim()};
   });
-  
-  const headers = parsedCSV.headers;
-  const hi = {}; // header index map
-  headers.forEach((h, i) => hi[h.toLowerCase().trim()] = i);
-  
-  // Find key column indices
-  const colHandle = hi['handle'] ?? -1;
-  const colTitle = hi['title'] ?? -1;
-  const colVendor = hi['vendor'] ?? -1;
-  const colSKU = hi['variant sku'] ?? -1;
-  const colBarcode = hi['variant barcode'] ?? -1;
-  const colType = hi['type'] ?? hi['product type'] ?? -1;
-  const colTags = hi['tags'] ?? -1;
-  const colOpt1Name = hi['option1 name'] ?? -1;
-  const colOpt1Val = hi['option1 value'] ?? -1;
-  const colOpt2Name = hi['option2 name'] ?? -1;
-  const colOpt2Val = hi['option2 value'] ?? -1;
-  const colOpt3Name = hi['option3 name'] ?? -1;
-  const colOpt3Val = hi['option3 value'] ?? -1;
-  const colPrice = hi['variant price'] ?? -1;
-  
-  // Google Shopping columns — find or create
-  const gCols = {
-    'google shopping / google product category': -1,
-    'google shopping / gender': -1,
-    'google shopping / age group': -1,
-    'google shopping / mpn': -1,
-    'google shopping / condition': -1,
-    'google shopping / custom label 0': -1,
-    'google shopping / custom label 1': -1,
+
+  const headers=parsed.headers;
+  const hi={};headers.forEach((h,i)=>hi[h.toLowerCase().trim()]=i);
+
+  const colHandle=hi['handle']??-1;
+  const colTitle=hi['title']??-1;
+  const colVendor=hi['vendor']??-1;
+  const colSKU=hi['variant sku']??-1;
+  const colBarcode=hi['variant barcode']??-1;
+  const colType=hi['type']??hi['product type']??-1;
+  const colTags=hi['tags']??-1;
+  const colO1N=hi['option1 name']??-1;
+  const colO1V=hi['option1 value']??-1;
+  const colO2N=hi['option2 name']??-1;
+  const colO2V=hi['option2 value']??-1;
+
+  // Ensure Google Shopping columns
+  const gCols={
+    'google shopping / google product category':-1,
+    'google shopping / gender':-1,
+    'google shopping / age group':-1,
+    'google shopping / mpn':-1,
+    'google shopping / condition':-1,
+    'google shopping / custom label 0':-1,
+    'google shopping / custom label 1':-1,
+    'google shopping / custom label 2':-1,
   };
-  
-  // Check existing headers
-  for (const key of Object.keys(gCols)) {
-    const idx = headers.findIndex(h => h.toLowerCase().trim() === key);
-    if (idx !== -1) gCols[key] = idx;
+  const newHeaders=[...headers];
+  for(const key of Object.keys(gCols)){
+    const idx=headers.findIndex(h=>h.toLowerCase().trim()===key);
+    if(idx!==-1)gCols[key]=idx;
+    else{gCols[key]=newHeaders.length;const lbl=key.split('/').map(p=>p.trim().split(' ').map(w=>w[0].toUpperCase()+w.slice(1)).join(' ')).join(' / ');newHeaders.push(lbl)}
   }
-  
-  // Add missing Google Shopping columns
-  const newHeaders = [...headers];
-  for (const key of Object.keys(gCols)) {
-    if (gCols[key] === -1) {
-      gCols[key] = newHeaders.length;
-      const label = key.split('/').map(p => p.trim()).map(p => p.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')).join(' / ');
-      newHeaders.push(label);
+
+  // Process
+  const seen=new Set();
+  let skuGen=0,bcKept=0,bcFound=0,bcMiss=0,vendorFix=0;
+  const procBtn=document.getElementById('procBtn');
+  procBtn.disabled=true;procBtn.textContent='Processing...';
+
+  const processedRows=[];
+  let lookupCount=0;
+  const maxLookups=50; // Limit API calls
+
+  for(let ri=0;ri<parsed.rows.length;ri++){
+    const originalRow=parsed.rows[ri];
+    const row=[...originalRow];
+    while(row.length<newHeaders.length)row.push('');
+
+    const title=colTitle>=0?(row[colTitle]||'').trim():'';
+    const handle=colHandle>=0?(row[colHandle]||'').trim():'';
+    const existingBarcode=colBarcode>=0?(row[colBarcode]||'').trim():'';
+    const o1n=colO1N>=0?(row[colO1N]||'').trim().toLowerCase():'';
+    const o1v=colO1V>=0?(row[colO1V]||'').trim():'';
+    const o2v=colO2V>=0?(row[colO2V]||'').trim():'';
+    const pType=colType>=0?(row[colType]||'').trim():'';
+    const tags=colTags>=0?(row[colTags]||'').trim():'';
+
+    if(!title&&!handle){processedRows.push(row);continue}
+
+    // Match sub-collection
+    const lTitle=title.toLowerCase();
+    const lType=pType.toLowerCase();
+    const lTags=tags.toLowerCase();
+    let matchedSC=null;
+
+    for(const[scKey,scData]of Object.entries(scMap)){
+      if(lTitle.includes(scKey)||lType.includes(scKey)||lTags.includes(scKey)||
+        scData.words.some(w=>lTitle.includes(w.toLowerCase()))){
+        matchedSC=scData;break;
+      }
     }
-  }
-  
-  // Add Material column if not present
-  let colMaterial = headers.findIndex(h => h.toLowerCase().includes('material'));
-  if (colMaterial === -1) {
-    colMaterial = newHeaders.length;
-    newHeaders.push('Google Shopping / Custom Label 2');
-  }
-  
-  // Process rows
-  const seen = new Set();
-  let skuGenerated = 0, barcodePreserved = 0, barcodeMissing = 0, vendorFixed = 0;
-  
-  const processedRows = parsedCSV.rows.map(originalRow => {
-    const row = [...originalRow];
-    // Pad row to match new headers
-    while (row.length < newHeaders.length) row.push('');
-    
-    const title = colTitle >= 0 ? (row[colTitle] || '').trim() : '';
-    const handle = colHandle >= 0 ? (row[colHandle] || '').trim() : '';
-    const existingSKU = colSKU >= 0 ? (row[colSKU] || '').trim() : '';
-    const existingBarcode = colBarcode >= 0 ? (row[colBarcode] || '').trim() : '';
-    const opt1Name = colOpt1Name >= 0 ? (row[colOpt1Name] || '').trim().toLowerCase() : '';
-    const opt1Val = colOpt1Val >= 0 ? (row[colOpt1Val] || '').trim() : '';
-    const opt2Name = colOpt2Name >= 0 ? (row[colOpt2Name] || '').trim().toLowerCase() : '';
-    const opt2Val = colOpt2Val >= 0 ? (row[colOpt2Val] || '').trim() : '';
-    const productType = colType >= 0 ? (row[colType] || '').trim() : '';
-    const tags = colTags >= 0 ? (row[colTags] || '').trim() : '';
-    
-    // Skip rows with no title and no handle (empty rows)
-    if (!title && !handle && !existingSKU) return row;
-    
-    // Generate SKU
-    let sku = '';
-    const pCode = productCode(title || handle, brandWords);
-    sku = bCode + '-' + pCode;
-    
-    // Add size token from title
-    const sz = sizeToken(title);
-    if (sz) sku += '-' + sz;
-    
-    // Add option values
-    if (opt1Val && opt1Val !== 'Default Title') {
-      const isSize = ['size', 'weight', 'volume'].some(s => opt1Name.includes(s));
-      const isColour = ['color', 'colour', 'shade'].some(s => opt1Name.includes(s));
-      if (!sz || !isSize) sku += '-' + optCode(opt1Val);
+    if(!matchedSC)matchedSC=Object.values(scMap)[0]||{code:'GEN',cat:'',words:[],name:''};
+
+    const scWords=matchedSC.words||[];
+    const pCode=productCode(title||handle,[...brandWords,...scWords],[]);
+    const sz=sizeToken(title);
+
+    // Build SKU: BRAND-SUBCOL-PRODUCT
+    let sku=bCode+'-'+matchedSC.code+'-'+pCode;
+    if(sz)sku+=sz;
+    if(o1v&&o1v!=='Default Title'){
+      const isSz=['size','weight','volume','length'].some(s=>o1n.includes(s));
+      if(!sz||!isSz)sku+='-'+optCode(o1v);
     }
-    if (opt2Val) sku += '-' + optCode(opt2Val);
-    
-    // Deduplicate
-    let finalSku = sku;
-    let suffix = 2;
-    while (seen.has(finalSku)) { finalSku = sku + '-' + suffix; suffix++; }
+    if(o2v)sku+='-'+optCode(o2v);
+
+    let finalSku=sku;let sfx=2;
+    while(seen.has(finalSku)){finalSku=sku+'-'+sfx;sfx++}
     seen.add(finalSku);
-    
-    // Set SKU
-    if (colSKU >= 0) row[colSKU] = finalSku;
-    skuGenerated++;
-    
-    // Fix vendor
-    if (colVendor >= 0) { row[colVendor] = brand; vendorFixed++; }
-    
+
+    if(colSKU>=0)row[colSKU]=finalSku;
+    skuGen++;
+
+    if(colVendor>=0){row[colVendor]=brand;vendorFix++}
+
     // Barcode handling
-    if (existingBarcode && existingBarcode.length >= 8 && !isNaN(existingBarcode.replace(/\s/g, ''))) {
-      barcodePreserved++;
-    } else {
-      barcodeMissing++;
+    const hasBarcode=existingBarcode&&existingBarcode.length>=8&&!isNaN(existingBarcode.replace(/\s/g,''));
+    if(hasBarcode){
+      bcKept++;
+    }else if(doLookup&&lookupCount<maxLookups&&title){
+      const found=await lookupBarcode(title,brand);
+      if(found&&found.barcode){
+        if(colBarcode>=0)row[colBarcode]=found.barcode;
+        bcFound++;
+      }else{bcMiss++}
+      lookupCount++;
+      // Rate limit: wait 600ms between lookups
+      await new Promise(r=>setTimeout(r,600));
+    }else{bcMiss++}
+
+    // Google Merchant fields
+    row[gCols['google shopping / google product category']]=matchedSC.cat;
+    row[gCols['google shopping / gender']]=gender;
+    row[gCols['google shopping / age group']]=ageGroup;
+    row[gCols['google shopping / mpn']]=finalSku;
+    row[gCols['google shopping / condition']]=condition;
+    row[gCols['google shopping / custom label 0']]=brand;
+    row[gCols['google shopping / custom label 1']]=matchedSC.name;
+    if(material)row[gCols['google shopping / custom label 2']]=material;
+
+    // GTIN = barcode
+    processedRows.push(row);
+
+    // Update progress
+    if(ri%20===0){
+      procBtn.textContent=`Processing... ${Math.round(ri/parsed.rows.length*100)}%`;
+      await new Promise(r=>setTimeout(r,10));
     }
-    
-    // Google Merchant Center fields
-    // Find matching sub-collection category
-    let googleCat = '';
-    const lowerType = productType.toLowerCase();
-    const lowerTags = tags.toLowerCase();
-    const lowerTitle = title.toLowerCase();
-    
-    for (const [scName, cat] of Object.entries(categoryMap)) {
-      if (lowerType.includes(scName) || lowerTags.includes(scName) || lowerTitle.includes(scName) || scName.includes(lowerType)) {
-        googleCat = cat; break;
-      }
-    }
-    if (!googleCat && Object.values(categoryMap).length > 0) {
-      googleCat = Object.values(categoryMap)[0]; // Fallback to first category
-    }
-    
-    // Set Google fields
-    row[gCols['google shopping / google product category']] = googleCat;
-    row[gCols['google shopping / gender']] = gender;
-    row[gCols['google shopping / age group']] = ageGroup;
-    row[gCols['google shopping / mpn']] = finalSku; // MPN = our SKU
-    row[gCols['google shopping / condition']] = condition;
-    row[gCols['google shopping / custom label 0']] = brand; // Brand in custom label
-    
-    // Match sub-collection name for custom label 1
-    for (const [scName] of Object.entries(categoryMap)) {
-      if (lowerType.includes(scName) || lowerTags.includes(scName) || lowerTitle.includes(scName)) {
-        row[gCols['google shopping / custom label 1']] = scName; break;
-      }
-    }
-    
-    // Material
-    if (material) row[colMaterial] = material;
-    
-    // GTIN = existing barcode (if valid)
-    if (existingBarcode && existingBarcode.length >= 8 && !isNaN(existingBarcode.replace(/\s/g, ''))) {
-      // Barcode is already in Variant Barcode column — Google uses that as GTIN
-    }
-    
-    return row;
-  });
-  
-  processedData = { headers: newHeaders, rows: processedRows };
-  
-  // Show results
-  showResults({
-    total: processedRows.length,
-    skuGenerated, barcodePreserved, barcodeMissing, vendorFixed,
-    brand, bCode
-  });
-  goToStep3();
+  }
+
+  result={headers:newHeaders,rows:processedRows};
+  procBtn.disabled=false;procBtn.textContent='Generate SKUs';
+  showResults({total:processedRows.length,skuGen,bcKept,bcFound,bcMiss,vendorFix,brand,bCode});
+  toStep3();
 }
 
-// ============================================================
-//  SHOW RESULTS
-// ============================================================
-function showResults(stats) {
-  // Stats
-  document.getElementById('statsGrid').innerHTML = `
-    <div class="stat"><div class="num">${stats.total}</div><div class="label">Total Variants</div></div>
-    <div class="stat"><div class="num">${stats.skuGenerated}</div><div class="label">SKUs Generated</div></div>
-    <div class="stat"><div class="num">${stats.barcodePreserved}</div><div class="label">Barcodes Preserved</div></div>
-    <div class="stat"><div class="num">${stats.barcodeMissing}</div><div class="label">Barcodes Missing</div></div>
+function showResults(s){
+  document.getElementById('sGrid').innerHTML=`
+    <div class="stat"><div class="num">${s.total}</div><div class="lbl">Total Variants</div></div>
+    <div class="stat"><div class="num">${s.skuGen}</div><div class="lbl">SKUs Generated</div></div>
+    <div class="stat"><div class="num">${s.bcKept}</div><div class="lbl">Barcodes Preserved</div></div>
+    <div class="stat"><div class="num">${s.bcFound}</div><div class="lbl">Barcodes Found Online</div></div>
+    <div class="stat"><div class="num">${s.bcMiss}</div><div class="lbl">Barcodes Still Missing</div></div>
   `;
-  
-  // Alerts
-  let alertsHtml = `<div class="alert alert-success">✅ All SKUs generated with prefix <strong>${stats.bCode}</strong> for brand <strong>${stats.brand}</strong></div>`;
-  if (stats.barcodeMissing > 0) {
-    alertsHtml += `<div class="alert alert-warning">⚠️ ${stats.barcodeMissing} products have no barcode. These will need barcodes added manually or via lookup.</div>`;
-  }
-  document.getElementById('alerts').innerHTML = alertsHtml;
-  
-  // Preview table
-  const previewCols = ['Handle', 'Title', 'Variant SKU', 'Variant Barcode', 'Vendor',
-    'Google Shopping / Google Product Category', 'Google Shopping / MPN', 'Google Shopping / Condition'];
-  
-  const colIndices = previewCols.map(col => 
-    processedData.headers.findIndex(h => h.toLowerCase().trim() === col.toLowerCase().trim())
-  ).filter(i => i >= 0);
-  
-  const headLabels = colIndices.map(i => processedData.headers[i]);
-  document.getElementById('previewHead').innerHTML = headLabels.map(h => {
-    const short = h.replace('Google Shopping / ', 'G: ').replace('Variant ', '');
-    return `<th>${short}</th>`;
-  }).join('');
-  
-  // Show first 50 rows
-  const previewRows = processedData.rows.slice(0, 50);
-  document.getElementById('previewBody').innerHTML = previewRows.map(row => {
-    return '<tr>' + colIndices.map(i => {
-      let val = (row[i] || '').toString();
-      if (val.length > 50) val = val.slice(0, 47) + '...';
-      
-      // Highlight
-      const header = processedData.headers[i].toLowerCase();
-      if (header.includes('sku') && val) return `<td><span class="tag tag-blue">${escapeHtml(val)}</span></td>`;
-      if (header.includes('barcode')) {
-        if (val && val.length >= 8) return `<td><span class="tag tag-green">${escapeHtml(val)}</span></td>`;
-        return `<td><span class="tag tag-red">Missing</span></td>`;
-      }
-      return `<td>${escapeHtml(val)}</td>`;
-    }).join('') + '</tr>';
-  }).join('');
+  let al=`<div class="alert alert-ok">✅ SKUs generated: <strong>${s.bCode}-SUBCOL-PRODUCT</strong> format for <strong>${s.brand}</strong></div>`;
+  if(s.bcFound>0)al+=`<div class="alert alert-info">🔍 Found ${s.bcFound} barcodes via online lookup</div>`;
+  if(s.bcMiss>0)al+=`<div class="alert alert-warn">⚠️ ${s.bcMiss} products still have no barcode — add manually or scan from packaging</div>`;
+  document.getElementById('alerts').innerHTML=al;
+
+  // Preview
+  const cols=['Handle','Title','Variant SKU','Variant Barcode','Vendor','Google Shopping / Google Product Category','Google Shopping / MPN','Google Shopping / Condition','Google Shopping / Custom Label 1'];
+  const ci=cols.map(c=>result.headers.findIndex(h=>h.toLowerCase().trim()===c.toLowerCase().trim())).filter(i=>i>=0);
+  const hl=ci.map(i=>result.headers[i]);
+  document.getElementById('pHead').innerHTML=hl.map(h=>{const sh=h.replace('Google Shopping / ','G: ').replace('Variant ','');return`<th>${sh}</th>`}).join('');
+  document.getElementById('pBody').innerHTML=result.rows.slice(0,60).map(row=>'<tr>'+ci.map(i=>{
+    let v=(row[i]||'').toString();if(v.length>45)v=v.slice(0,42)+'...';
+    const hdr=result.headers[i].toLowerCase();
+    if(hdr.includes('sku')&&v)return`<td><span class="tag tag-blu">${esc(v)}</span></td>`;
+    if(hdr.includes('barcode')){
+      if(v&&v.length>=8)return`<td><span class="tag tag-grn">${esc(v)}</span></td>`;
+      return`<td><span class="tag tag-red">Missing</span></td>`;
+    }
+    return`<td>${esc(v)}</td>`;
+  }).join('')+'</tr>').join('');
 }
 
-// ============================================================
-//  DOWNLOAD CSV
-// ============================================================
-function downloadCSV() {
-  if (!processedData) return;
-  
-  const csvContent = [processedData.headers, ...processedData.rows]
-    .map(row => row.map(cell => {
-      const str = String(cell ?? '');
-      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
-        return '"' + str.replace(/"/g, '""') + '"';
-      }
-      return str;
-    }).join(','))
-    .join('\n');
-  
-  const brand = document.getElementById('brandName').value.trim().replace(/[^a-zA-Z0-9]/g, '_');
-  const filename = `${brand}_shopify_reimport_with_SKUs.csv`;
-  
-  const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = filename;
-  link.click();
-  URL.revokeObjectURL(link.href);
+function dlCSV(){
+  if(!result)return;
+  const csv=[result.headers,...result.rows].map(r=>r.map(c=>{const s=String(c??'');return s.includes(',')||s.includes('"')||s.includes('\n')?'"'+s.replace(/"/g,'""')+'"':s}).join(',')).join('\n');
+  const bn=document.getElementById('brandName').value.trim().replace(/[^a-zA-Z0-9]/g,'_');
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=bn+'_shopify_reimport.csv';a.click();URL.revokeObjectURL(a.href);
 }
 
-// ============================================================
-//  AUTO BRAND CODE
-// ============================================================
-document.getElementById('brandName').addEventListener('input', function() {
-  const codeInput = document.getElementById('brandCode');
-  if (!codeInput.dataset.manual) {
-    codeInput.value = generateBrandCode(this.value);
-  }
+// Init
+addSC();
+document.getElementById('brandName').addEventListener('input',function(){
+  const c=document.getElementById('brandCode');
+  if(!c.dataset.m)c.value=genBrandCode(this.value);
+  updatePreview();
 });
-document.getElementById('brandCode').addEventListener('input', function() {
-  this.dataset.manual = this.value.trim() ? '1' : '';
-});
-
-// Init with one sub-collection row
-addSubCollection();
 </script>
-
 </body>
 </html>
